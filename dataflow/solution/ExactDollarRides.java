@@ -110,7 +110,13 @@ public class ExactDollarRides {
         }))
      
      .apply("fixed window & triggering", 
-        /* insert code here */)
+       Window.<Double>into(FixedWindows.of(Duration.standardMinutes(1)))
+        .triggering(
+          AfterWatermark.pastEndOfWindow()
+            .withEarlyFirings(AfterProcessingTime.pastFirstElementInPane().plusDelayOf(Duration.standardSeconds(1)))
+            .withLateFirings(AfterPane.elementCountAtLeast(1)))
+          .accumulatingFiredPanes()
+          .withAllowedLateness(Duration.standardMinutes(5)))
 
      .apply("sum whole window", Sum.doublesGlobally().withoutDefaults())
 

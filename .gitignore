@@ -4,4 +4,4 @@
 dataflow/.classpath
 dataflow/.project
 dataflow/.settings
-dataflow/target
+**/target
